@@ -47,12 +47,12 @@ def create_joint_limits_file(
         joint_name = f"{tf_prefix}{joint}"
 
         content += f"""  {joint_name}:
-                has_velocity_limits: true
-                max_velocity: {max_velocity}
-                has_acceleration_limits: true
-                max_acceleration: {max_acceleration}
-                has_jerk_limits: false
-            """
+    has_velocity_limits: true
+    max_velocity: {max_velocity}
+    has_acceleration_limits: true
+    max_acceleration: {max_acceleration}
+    has_jerk_limits: false
+"""
 
     fd, path = tempfile.mkstemp(
         prefix=f"{robot_name}_joint_limits_",
@@ -84,24 +84,24 @@ def create_moveit_controller_file(
     ]
 
     content = """\
-        moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
+moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
 
-        trajectory_execution:
-        allowed_execution_duration_scaling: 1.2
-        allowed_goal_duration_margin: 0.5
-        allowed_start_tolerance: 0.01
-        execution_duration_monitoring: false
+trajectory_execution:
+  allowed_execution_duration_scaling: 1.2
+  allowed_goal_duration_margin: 0.5
+  allowed_start_tolerance: 0.01
+  execution_duration_monitoring: false
 
-        moveit_simple_controller_manager:
-        controller_names:
-            - joint_trajectory_controller
+moveit_simple_controller_manager:
+  controller_names:
+    - joint_trajectory_controller
 
-        joint_trajectory_controller:
-            action_ns: follow_joint_trajectory
-            type: FollowJointTrajectory
-            default: true
-            joints:
-        """
+  joint_trajectory_controller:
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: true
+    joints:
+"""
 
     for joint in joints:
         content += f"      - {joint}\n"

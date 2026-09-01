@@ -22,22 +22,22 @@ from launch_ros.actions import Node
 def create_conveyor_start_command():
 
     script = r"""
-            echo "[workcell] Waiting for conveyor control service..."
+        echo "[workcell] Waiting for conveyor control service..."
 
-            until ros2 service list 2>/dev/null | grep -q "^/CONVEYORPOWER$"; do
-                sleep 1
-            done
+        until ros2 service list 2>/dev/null | grep -q "^/CONVEYORPOWER$"; do
+            sleep 1
+        done
 
-            echo "[workcell] Conveyor service READY"
-            echo "[workcell] Starting conveyor at 100% power..."
+        echo "[workcell] Conveyor service READY"
+        echo "[workcell] Starting conveyor at 100% power..."
 
-            ros2 service call \
-                /CONVEYORPOWER \
-                conveyorbelt_msgs/srv/ConveyorBeltControl \
-                "{power: 100.0}"
+        ros2 service call \
+            /CONVEYORPOWER \
+            conveyorbelt_msgs/srv/ConveyorBeltControl \
+            "{power: 100.0}"
 
-            echo "[workcell] Conveyor START command sent"
-        """
+        echo "[workcell] Conveyor START command sent"
+    """
 
     return ExecuteProcess(
         cmd=["bash", "-c", script],

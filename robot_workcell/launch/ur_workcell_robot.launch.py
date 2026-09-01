@@ -56,10 +56,10 @@ def create_jsb_file(
     robot_name,
 ):
     content = f"""\
-        /{robot_name}/joint_state_broadcaster:
-        ros__parameters:
-            type: joint_state_broadcaster/JointStateBroadcaster
-        """
+/{robot_name}/joint_state_broadcaster:
+  ros__parameters:
+    type: joint_state_broadcaster/JointStateBroadcaster
+"""
 
     fd, path = tempfile.mkstemp(
         prefix=f"{robot_name}_jsb_",
@@ -86,33 +86,33 @@ def create_jtc_file(
     ]
 
     content = f"""\
-            /{robot_name}/joint_trajectory_controller:
-            ros__parameters:
-                type: joint_trajectory_controller/JointTrajectoryController
+/{robot_name}/joint_trajectory_controller:
+  ros__parameters:
+    type: joint_trajectory_controller/JointTrajectoryController
 
-                joints:
-            """
+    joints:
+"""
 
     for joint in joints:
         content += f"      - {joint}\n"
 
     content += """\
-            command_interfaces:
-            - position
+    command_interfaces:
+      - position
 
-            state_interfaces:
-            - position
-            - velocity
+    state_interfaces:
+      - position
+      - velocity
 
-            state_publish_rate: 100.0
-            action_monitor_rate: 20.0
+    state_publish_rate: 100.0
+    action_monitor_rate: 20.0
 
-            allow_partial_joints_goal: false
+    allow_partial_joints_goal: false
 
-            constraints:
-            stopped_velocity_tolerance: 0.2
-            goal_time: 0.0
-        """
+    constraints:
+      stopped_velocity_tolerance: 0.2
+      goal_time: 0.0
+"""
 
     fd, path = tempfile.mkstemp(
         prefix=f"{robot_name}_jtc_",
@@ -133,29 +133,29 @@ def create_gripper_controller_file(
     )
 
     content = f"""\
-        /{robot_name}/robotiq_gripper_controller:
-        ros__parameters:
-            type: joint_trajectory_controller/JointTrajectoryController
+/{robot_name}/robotiq_gripper_controller:
+  ros__parameters:
+    type: joint_trajectory_controller/JointTrajectoryController
 
-            joints:
-            - {gripper_joint}
+    joints:
+      - {gripper_joint}
 
-            command_interfaces:
-            - position
+    command_interfaces:
+      - position
 
-            state_interfaces:
-            - position
-            - velocity
+    state_interfaces:
+      - position
+      - velocity
 
-            state_publish_rate: 100.0
-            action_monitor_rate: 20.0
+    state_publish_rate: 100.0
+    action_monitor_rate: 20.0
 
-            allow_partial_joints_goal: false
+    allow_partial_joints_goal: false
 
-            constraints:
-            stopped_velocity_tolerance: 0.2
-            goal_time: 0.0
-        """
+    constraints:
+      stopped_velocity_tolerance: 0.2
+      goal_time: 0.0
+"""
 
     fd, path = tempfile.mkstemp(
         prefix=f"{robot_name}_gripper_",
