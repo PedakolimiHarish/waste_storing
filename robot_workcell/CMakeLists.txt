@@ -14,10 +14,11 @@ find_package(controller_manager REQUIRED)
 
 install(
   DIRECTORY
-    urdf
+    launch
     config
     worlds
-    launch
+    models
+    urdf
   DESTINATION share/${PROJECT_NAME}
 )
 

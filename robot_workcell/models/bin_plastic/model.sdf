@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<sdf version="1.6">
+  <model name="bin_plastic">
+    <link name="link_0">
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>meshes/model.obj</uri>
+            <scale>2 2 2</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.05 0.25 1.0 1</ambient>
+          <diffuse>0.05 0.25 1.0 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+      <collision name="collision_0">
+        <geometry>
+          <mesh>
+            <uri>meshes/model.obj</uri>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>

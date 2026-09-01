@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+
+<sdf version="1.6">
+
+  <model name="OceanFloorTexture">
+
+    <static>true</static>
+
+    <link name="base_link">
+
+      <visual name="OceanFloorTexture">
+
+        <!-- Floor geometry -->
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>20 20</size>
+          </plane>
+        </geometry>
+
+        <!-- Ocean floor material -->
+        <material>
+
+          <diffuse>1.0 1.0 1.0 1.0</diffuse>
+          <specular>0.2 0.2 0.2 1.0</specular>
+
+          <pbr>
+            <metal>
+
+              <albedo_map>
+                model://Ocean Floor Texture/materials/textures/OceanFloor_Albedo.png
+              </albedo_map>
+
+              <normal_map>
+                model://Ocean Floor Texture/materials/textures/OceanFloor_Normal.png
+              </normal_map>
+
+              <roughness_map>
+                model://Ocean Floor Texture/materials/textures/OceanFloor_Roughness.png
+              </roughness_map>
+
+            </metal>
+          </pbr>
+
+        </material>
+
+      </visual>
+
+    </link>
+
+  </model>
+
+</sdf>
