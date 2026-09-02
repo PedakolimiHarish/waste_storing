@@ -484,7 +484,7 @@ This mode is intended for developing and modifying the simulated workcell.
 
 ---
 
-# Start the Complete Gazebo Workcell
+# Start the Complete 4 Robot Gazebo Workcell
 
 For the complete simulation, use:
 
@@ -498,6 +498,23 @@ ros2 launch robot_workcell workcell_gazebo.launch.py
 This starts the complete four-robot simulation.
 
 The robots are started sequentially so that each robot's controllers are ready before the next robot is started.
+
+The conveyor is also commanded to start automatically at 100% power.
+
+---
+
+# Start the single Robot Gazebo Workcell
+
+For the complete simulation, use:
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source ~/ros2_ws/install/setup.bash
+
+ ros2 launch robot_workcell single_robot_gazebo.launch.py
+```
+
+This starts the complete single-robot simulation.
 
 The conveyor is also commanded to start automatically at 100% power.
 
