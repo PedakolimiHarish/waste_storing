@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="gripper">
+
+
+
+    <link name="gripper-fingures">
+        <inertial>
+            <origin xyz="-0.007202423931313507 0.03233388598897696 0.0046500000012986275" rpy="0.0 -0.0 0.0" />
+            <mass value="0.051082833248078746" />
+            <inertia ixx="2.2609727990578986e-05" iyy="1.4723887450033833e-06" izz="2.3238556272986628e-05" ixy="3.4432874020975498e-06" iyz="2.1739764357788147e-20" ixz="-2.2926661845701355e-20" />
+        </inertial>
+        <visual name="gripper-fingures_visual">
+            <origin xyz="4.2070603445409916e-10 -1.2773561319789907e-09 0.004650000001298702" rpy="3.1415926535897922 3.9379565502346457e-16 0.39793506945470725" />
+            <geometry>
+                <mesh filename="meshes/gripper-fingures.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="gripper-fingures_collision">
+            <origin xyz="4.2070603445409916e-10 -1.2773561319789907e-09 0.004650000001298702" rpy="3.1415926535897922 3.9379565502346457e-16 0.39793506945470725" />
+            <geometry>
+                <mesh filename="meshes/gripper-fingures.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+
+
+
+
+    <link name="gripper-fingures">
+        <inertial>
+            <origin xyz="0.007202423930114386 -0.032333885989413266 -0.004600000001100677" rpy="4.930380657631324e-32 -0.0 1.401298464324817e-45" />
+            <mass value="0.051082833248078746" />
+            <inertia ixx="2.2609727990579e-05" iyy="1.4723887450033973e-06" izz="2.3238556272986628e-05" ixy="3.4432874020975714e-06" iyz="-7.11404070862978e-20" ixz="-1.0220726687669681e-20" />
+        </inertial>
+        <visual name="gripper-fingures_visual">
+            <origin xyz="-4.219051596976442e-10 1.2769198409756654e-09 -0.0046000000011005284" rpy="3.141592653589791 4.306506350350853e-15 -2.7436575841350854" />
+            <geometry>
+                <mesh filename="meshes/gripper-fingures.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+        <collision name="gripper-fingures_collision">
+            <origin xyz="-4.219051596976442e-10 1.2769198409756654e-09 -0.0046000000011005284" rpy="3.141592653589791 4.306506350350853e-15 -2.7436575841350854" />
+            <geometry>
+                <mesh filename="meshes/gripper-fingures.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+    </link>
+
+
+
+
+
+
+</robot>

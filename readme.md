@@ -1,57 +1,20 @@
 # Waste Sorting Robotic Workcell
 
-A ROS 2 Jazzy and Gazebo-based robotic waste sorting simulation consisting of four UR10e robotic arms equipped with Robotiq 2F-85 grippers.
+A ROS 2 Jazzy and Gazebo-based robotic waste sorting simulation consisting of a custom robotic arm with an integrated gripper.
 
-The workcell simulates a conveyor-based waste sorting system in which waste objects are transported along a conveyor and assigned to different robotic stations for sorting.
+The workcell simulates a conveyor-based waste sorting system in which waste objects are transported along a conveyor and assigned to robotic stations for sorting.
 
 ## Main Components
 
-- 4 × Universal Robots UR10e
-
-- 4 × Robotiq 2F-85 parallel grippers
 
 - 1 × conveyor belt
-
 - Plastic (Blue Bins) and metal (Gray Bins) waste sorting bins
-
 - Robot work tables
-
+- Custom robotic arm with gripper
 - Gazebo Harmonic simulation environment
-
 - MoveIt 2 motion planning
-
 - `ros2_control` robot control
-
 - Custom ROS 2 workcell launch and configuration
-
-
-## Simulation Architecture
-
-```text
-                    Waste Sorting Workcell
-
-                         Waste Objects
-                               │
-                               ▼
-                        ┌─────────────┐
-                        │  Conveyor   │
-                        └─────────────┘
-                               │
-             ┌─────────────────┼─────────────────┐─────────────┐
-             │                 │                 │             │
-             ▼                 ▼                 ▼             ▼
-           Robot 1           Robot 2           Robot 3      Robot 4
-             │                 │                 │             │
-          UR10e             UR10e             UR10e         UR10e
-             │                 │                 │             │
-        Robotiq 2F-85     Robotiq 2F-85     Robotiq 2F-85  Robotiq 2F-85
-             │                 │                 │             │
-        Plastic/Metal     Plastic/Metal     Plastic/Metal  Plastic/Metal
-             │                 │                 │             │
-             └─────────────────┴─────────────────┴─────────────┘
-```
-
-The simulation is intended as the foundation for a complete autonomous waste sorting system, including object detection, tracking, robotic picking, classification, and placement.
 
 ---
 # Environment
@@ -67,7 +30,6 @@ The project is developed and tested using **Docker Desktop with WSL2**. The ROS 
 - **Container runtime:** Docker Desktop
 
 - **Source workspace:** `~/ros2/src`
-
 
 ## Docker Environment
 
@@ -102,29 +64,21 @@ The container provides the ROS 2 development and simulation environment.
 
 The simulated workcell consists of:
 
-```text
-4 × Universal Robots UR10e
-4 × Robotiq 2F-85 grippers
+```
 1 × conveyor belt
 Plastic waste bins (Blue)
 Metal waste bins (Gray)
-Robot work tables
+Custom robotic arm
+Gripper
 ```
 
 ## ROS 2 Packages
 
 The workspace contains the packages required for:
 
-- Universal Robots simulation
-
-- UR10e robot description and controllers
-
 - MoveIt configuration
-
-- Robotiq grippers
-
 - Conveyor belt simulation
-
+- Custom robotic arm
 - Custom waste-sorting workcell
 
 ---
@@ -143,26 +97,6 @@ Clone the repository directly into the `src` directory:
 git clone https://github.com/PedakolimiHarish/waste_sorting.git src
 ```
 
-The ROS 2 source workspace should then contain the individual packages directly under `src`:
-
-```text
-~/ros2/
-└── src/
-    ├── robot_workcell/
-    ├── ur_description/
-    ├── ur_msgs/
-    ├── ur_client_library/
-    ├── ur_controllers/
-    ├── ur_moveit_config/
-    ├── ur_simulation_gz/
-    ├── conveyorbelt_gz/
-    ├── conveyorbelt_msgs/
-    ├── ros2_conveyorbelt/
-    ├── robotiq_description/
-    ├── robotiq_controllers/
-    ├── robotiq_driver/
-    └── ...
-```
 
 The Docker configuration is part of the repository:
 
@@ -373,424 +307,323 @@ After a successful build:
 RUN echo "source ~/ros2_ws/install/setup.bash" >> /home/ubuntu/.bashrc
 ```
 ---
-# Optional UR10e Standalone Test
-
-The upstream Universal Robots simulation can be tested independently before starting the custom workcell.
-
-Terminal 1:
-
-```bash
-source /opt/ros/jazzy/setup.bash
-source ~/ros2_ws/install/setup.bash
-
-ros2 launch ur_simulation_gz ur_sim_control.launch.py \
-  ur_type:=ur10e
-```
-
-Terminal 2:
-
-```bash
-source /opt/ros/jazzy/setup.bash
-source ~/ros2_ws/install/setup.bash
-
-ros2 launch ur_simulation_gz ur_sim_moveit.launch.py \
-  ur_type:=ur10e
-```
-
-This test is optional and is not required for running the final waste-sorting workcell.
-
----
 
 # Workcell Launch Files
 
-The custom workcell contains the following main launch files:
+The custom workcell currently contains two launch files:
 
 ```text
-launch/
-├── ur_workcell_robot.launch.py
-├── ur_workcell_moveit_robot.launch.py
-├── workcell_gazebo.launch.py
-└── workcell_moveit.launch.py
+robot_workcell/
+└── launch/
+
+    ├── gazebo.launch.py
+    └── workcell_moveit.launch.py
+````
+
+## `gazebo.launch.py`
+
+Starts the Gazebo simulation for the robotic arm workcell.
+
+It handles:
+
+- Gazebo world
+- Robot State Publisher
+- Robot spawning
+- Gazebo/ROS `/clock` bridge
+- `ros2_control`
+- Joint State Broadcaster
+- Arm controller
+- Gripper controller
+
+This launch file does **not** start MoveIt or the conveyor startup command.
+
+Run:
+
 ```
-
-### `ur_workcell_robot.launch.py`
-
-Starts one UR10e robot, its `ros2_control` system, and its controllers.
-
-The robot includes a Robotiq 2F-85 gripper.
-
-### `ur_workcell_moveit_robot.launch.py`
-
-Starts the MoveIt backend for one robot.
-
-### `workcell_world.launch.py`
-
-Starts only the Gazebo workcell environment without the four robots.
-
-This is useful when modifying:
-
-- workcell layout
-
-- conveyor
-
-- tables
-
-- sorting bins
-
-- environment models
-
-
-### `workcell_gazebo.launch.py`
-
-Starts the complete simulated workcell with:
-
-- four UR10e robots
-
-- four Robotiq 2F-85 grippers
-
-- conveyor belt
-
-- tables
-
-- plastic bins
-
-- metal bins
-
-- Gazebo environment
-
-- robot controllers
-
-
-The conveyor is automatically started by this launch file.
-
-### `workcell_moveit.launch.py`
-
-Starts the MoveIt backend for all four robots.
-
----
-
-# Start the Gazebo World Only
-
-To start Gazebo without the four robots:
-
-```bash
 source /opt/ros/jazzy/setup.bash
 source ~/ros2_ws/install/setup.bash
 
-ros2 launch robot_workcell workcell_world.launch.py
+ros2 launch robot_workcell gazebo.launch.py
 ```
-
-This mode is intended for developing and modifying the simulated workcell.
 
 ---
 
-# Start the Complete 4 Robot Gazebo Workcell
+## `workcell_moveit.launch.py`
 
-For the complete simulation, use:
+Starts the complete robotic workcell and MoveIt 2.
 
-```bash
+This is the main launch file for the full simulation.
+
+It directly starts:
+
+- Gazebo workcell
+- Robot State Publisher
+- Robotic arm
+- Gripper
+- `ros2_control`
+- Joint State Broadcaster
+- Arm controller
+- Gripper controller
+- Conveyor
+- MoveIt 2
+- RViz (optional)
+
+The conveyor is automatically started at 100% power.
+
+By default, RViz is disabled.
+
+---
+
+# Start Complete Workcell with MoveIt
+
+Start the complete simulation:
+
+```
 source /opt/ros/jazzy/setup.bash
 source ~/ros2_ws/install/setup.bash
 
-ros2 launch robot_workcell workcell_gazebo.launch.py
-```
-
-This starts the complete four-robot simulation.
-
-The robots are started sequentially so that each robot's controllers are ready before the next robot is started.
-
-The conveyor is also commanded to start automatically at 100% power.
-
----
-
-# Start the single Robot Gazebo Workcell
-
-For the complete simulation, use:
-
-```bash
-source /opt/ros/jazzy/setup.bash
-source ~/ros2_ws/install/setup.bash
-
- ros2 launch robot_workcell single_robot_gazebo.launch.py
-```
-
-This starts the complete single-robot simulation.
-
-The conveyor is also commanded to start automatically at 100% power.
-
----
-
-# Verify the Four Robot Controllers
-
-After Gazebo has started, check Robot 1:
-
-```bash
-ros2 control list_controllers \
-  -c /robot1/controller_manager
-```
-
-Repeat for the other robots:
-
-```bash
-ros2 control list_controllers \
-  -c /robot2/controller_manager
-
-ros2 control list_controllers \
-  -c /robot3/controller_manager
-
-ros2 control list_controllers \
-  -c /robot4/controller_manager
-```
-
-Each robot should have:
-
-```text
-joint_state_broadcaster
-joint_trajectory_controller
-robotiq_gripper_controller
-```
-
-with the controllers in the `active` state.
-
----
-
-# Verify Robot Actions
-
-Check the arm trajectory actions:
-
-```bash
-ros2 action list | grep follow_joint_trajectory
-```
-
-Expected:
-
-```text
-/robot1/joint_trajectory_controller/follow_joint_trajectory
-/robot2/joint_trajectory_controller/follow_joint_trajectory
-/robot3/joint_trajectory_controller/follow_joint_trajectory
-/robot4/joint_trajectory_controller/follow_joint_trajectory
-```
-
-Check the gripper actions:
-
-```bash
-ros2 action list | grep robotiq_gripper_controller
-```
-
-Expected:
-
-```text
-/robot1/robotiq_gripper_controller/follow_joint_trajectory
-/robot2/robotiq_gripper_controller/follow_joint_trajectory
-/robot3/robotiq_gripper_controller/follow_joint_trajectory
-/robot4/robotiq_gripper_controller/follow_joint_trajectory
-```
-
----
-
-# Start MoveIt
-
-Open another terminal attached to the same Docker container and source the environment:
-
-```bash
-source /opt/ros/jazzy/setup.bash
-source ~/ros2_ws/install/setup.bash
-```
-
-Start MoveIt:
-
-```bash
 ros2 launch robot_workcell workcell_moveit.launch.py
 ```
 
-MoveIt provides a separate backend for each robot:
+To start the same system with RViz:
 
-```text
-/robot1/move_group
-/robot2/move_group
-/robot3/move_group
-/robot4/move_group
 ```
+ros2 launch robot_workcell workcell_moveit.launch.py use_rviz:=true
+```
+
+The complete system is:
+
+```
+workcell_moveit.launch.py
+│
+├── Gazebo
+│   └── waste_sorting_cell.sdf
+│
+├── Robot State Publisher
+│
+├── Robotic Arm
+│
+├── Gripper
+│
+├── ros2_control
+│   ├── joint_state_broadcaster
+│   ├── arm_controller
+│   └── gripper_controller
+│
+├── Conveyor
+│
+├── MoveIt 2
+│   └── move_group
+│
+└── RViz (optional)
+```
+
+
+
+# Robot Control Commands
+
+The robot arm and gripper can also be controlled directly from the terminal without writing a separate program.
+
+## Move Robot Arm
+
+The arm is controlled through the MoveIt 2 `/move_action` interface.
+
+The robot can be commanded using an **XYZ position** for the end effector (`link_4`). MoveIt performs position-only IK and motion planning to determine the required joint motion.
+
+Example command:
+
+```
+ros2 action send_goal --feedback \
+/move_action \
+moveit_msgs/action/MoveGroup \
+"{
+  request: {
+    group_name: arm,
+    pipeline_id: ompl,
+    num_planning_attempts: 5,
+    allowed_planning_time: 10.0,
+    max_velocity_scaling_factor: 1.0,
+    max_acceleration_scaling_factor: 1.0,
+    goal_constraints: [
+      {
+        position_constraints: [
+          {
+            header: {
+              frame_id: base_link
+            },
+            link_name: link_4,
+            constraint_region: {
+              primitives: [
+                {
+                  type: 1,
+                  dimensions: [0.02, 0.02, 0.02]
+                }
+              ],
+              primitive_poses: [
+                {
+                  position: {
+                    x: 0.380,
+                    y: -0.003,
+                    z: 0.417
+                  },
+                  orientation: {
+                    x: 0.0,
+                    y: 0.0,
+                    z: 0.0,
+                    w: 1.0
+                  }
+                }
+              ]
+            },
+            weight: 1.0
+          }
+        ]
+      }
+    ]
+  },
+  planning_options: {
+    plan_only: false,
+    look_around: false,
+    replan: false
+  }
+}"
+```
+
+This example commands MoveIt to move the `link_4` end effector to:
+
+```
+Frame: base_link
+
+X = 0.380 m
+Y = -0.003 m
+Z = 0.417 m
+```
+
+The position goal uses a small 3D tolerance region:
+
+```
+0.02 m × 0.02 m × 0.02 m
+```
+
+### Motion Parameters
+
+```
+Planning group: arm
+Planner: OMPL
+End effector: link_4
+Target frame: base_link
+Target: X, Y, Z
+Velocity scaling: 1.0
+Acceleration scaling: 1.0
+```
+
+The four arm joints are calculated automatically by MoveIt using position-only IK. The resulting trajectory is then executed through `arm_controller`.
+
+For a different target, change only:
+
+```
+x: ...
+y: ...
+z: ...
+```
+
+For example:
+
+```
+position:
+  x: 0.30
+  y: 0.10
+  z: 0.25
+```
+
+This allows an external system such as the vision system to provide the object's **X, Y, Z position**, which can then be used as the MoveIt target.
+
 
 ---
 
-# Verify MoveIt
 
-Check the MoveIt nodes:
 
-```bash
-ros2 node list | grep move_group
-```
+## Open Gripper
 
-Check the MoveIt actions:
+The gripper is controlled through the `gripper_controller` trajectory action.
 
-```bash
-ros2 action list | grep move_action
-```
-
-Expected:
-
-```text
-/robot1/move_action
-/robot2/move_action
-/robot3/move_action
-/robot4/move_action
-```
-
-At this point the complete simulation environment is running with Gazebo, four UR10e robots, four Robotiq grippers, robot controllers, and MoveIt.
-
----
-# Verify All Robots and Grippers
-
-In this it uses Radian only
-
-## Robot 1
+To **open the gripper**:
 
 ```
-ros2 action send_goal \
-/robot1/joint_trajectory_controller/follow_joint_trajectory \
+ros2 action send_goal --feedback \
+/gripper_controller/follow_joint_trajectory \
 control_msgs/action/FollowJointTrajectory \
 "{
   trajectory: {
-    joint_names: [
-      robot1_shoulder_pan_joint,
-      robot1_shoulder_lift_joint,
-      robot1_elbow_joint,
-      robot1_wrist_1_joint,
-      robot1_wrist_2_joint,
-      robot1_wrist_3_joint
-    ],
+    joint_names: [link_4_right_gear_joint],
     points: [
       {
-        positions: [0.50, -1.00, 1.00, -1.00, 0.50, 0.50],
-        time_from_start: {sec: 3, nanosec: 0}
+        positions: [-1.0],
+        time_from_start: {
+          sec: 1,
+          nanosec: 0
+        }
       }
     ]
   }
 }"
 ```
 
-## Robot 2
+## Close Gripper
+
+To **close the gripper**:
 
 ```
-ros2 action send_goal \
-/robot2/joint_trajectory_controller/follow_joint_trajectory \
+ros2 action send_goal --feedback \
+/gripper_controller/follow_joint_trajectory \
 control_msgs/action/FollowJointTrajectory \
 "{
   trajectory: {
-    joint_names: [
-      robot2_shoulder_pan_joint,
-      robot2_shoulder_lift_joint,
-      robot2_elbow_joint,
-      robot2_wrist_1_joint,
-      robot2_wrist_2_joint,
-      robot2_wrist_3_joint
-    ],
-    points: [
-      {
-        positions: [0.50, -1.00, 1.00, -1.00, 0.50, 0.50],
-        time_from_start: {sec: 3, nanosec: 0}
-      }
-    ]
-  }
-}"
-```
-
-## Robot 3
-
-```
-ros2 action send_goal \
-/robot3/joint_trajectory_controller/follow_joint_trajectory \
-control_msgs/action/FollowJointTrajectory \
-"{
-  trajectory: {
-    joint_names: [
-      robot3_shoulder_pan_joint,
-      robot3_shoulder_lift_joint,
-      robot3_elbow_joint,
-      robot3_wrist_1_joint,
-      robot3_wrist_2_joint,
-      robot3_wrist_3_joint
-    ],
-    points: [
-      {
-        positions: [0.50, -1.00, 1.00, -1.00, 0.50, 0.50],
-        time_from_start: {sec: 3, nanosec: 0}
-      }
-    ]
-  }
-}"
-```
-
-## Robot 4
-
-```
-ros2 action send_goal \
-/robot4/joint_trajectory_controller/follow_joint_trajectory \
-control_msgs/action/FollowJointTrajectory \
-"{
-  trajectory: {
-    joint_names: [
-      robot4_shoulder_pan_joint,
-      robot4_shoulder_lift_joint,
-      robot4_elbow_joint,
-      robot4_wrist_1_joint,
-      robot4_wrist_2_joint,
-      robot4_wrist_3_joint
-    ],
-    points: [
-      {
-        positions: [0.50, -1.00, 1.00, -1.00, 0.50, 0.50],
-        time_from_start: {sec: 3, nanosec: 0}
-      }
-    ]
-  }
-}"
-```
-
-## Test the grippers too
-
-### Robot 1 open
-
-```
-ros2 action send_goal \
-/robot1/robotiq_gripper_controller/follow_joint_trajectory \
-control_msgs/action/FollowJointTrajectory \
-"{
-  trajectory: {
-    joint_names: [robot1_robotiq_85_left_knuckle_joint],
+    joint_names: [link_4_right_gear_joint],
     points: [
       {
         positions: [0.0],
-        time_from_start: {sec: 2, nanosec: 0}
+        time_from_start: {
+          sec: 1,
+          nanosec: 0
+        }
       }
     ]
   }
 }"
 ```
 
-### Robot 1 close
+### Gripper Positions
 
 ```
-ros2 action send_goal \
-/robot1/robotiq_gripper_controller/follow_joint_trajectory \
-control_msgs/action/FollowJointTrajectory \
-"{
-  trajectory: {
-    joint_names: [robot1_robotiq_85_left_knuckle_joint],
-    points: [
-      {
-        positions: [0.79],
-        time_from_start: {sec: 2, nanosec: 0}
-      }
-    ]
-  }
-}"
+-1.0 rad → Open
+ 0.0 rad → Close
 ```
-For robots 2–4, substitute the prefix:
+
+The gripper movement duration can be changed using:
 
 ```
-robot2_...
-robot3_...
-robot4_...
+time_from_start:
+  sec: 1
+```
+
+For example:
+
+```
+0.5 sec → faster
+1.0 sec → current setting
+2.0 sec → slower
+```
+
+The active gripper joint is:
+
+```
+link_4_right_gear_joint
+```
+
+The remaining gripper joints are mimic joints and follow the master joint automatically.
+
+```
+
+One correction from the earlier README: use **`-1.0 = open` and `0.0 = closed`
 ```
