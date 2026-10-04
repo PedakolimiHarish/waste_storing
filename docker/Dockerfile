@@ -50,6 +50,10 @@ RUN apt-get update && apt-get install -y \
     ros-jazzy-ros-gz \
     ros-jazzy-gz-ros2-control \
     ros-jazzy-moveit \
+    ros-jazzy-cv-bridge \
+    ros-jazzy-image-transport \
+    ros-jazzy-std-msgs \
+    python3-opencv
     && rm -rf /var/lib/apt/lists/*
 
 # ------------------------------------------------------------------------------

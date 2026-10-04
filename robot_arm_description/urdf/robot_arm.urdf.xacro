@@ -201,10 +201,9 @@
       <geometry>
         <mesh filename="package://robot_arm_description/meshes/gripper_base.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material
-        name="">
-        <color rgba="0.79216 0.81961 0.93333 1" />
-      </material>
+      <material name="gripper_grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+    </material>
     </visual>
 
     <collision>
@@ -244,6 +243,9 @@
       <geometry>
           <mesh filename="package://robot_arm_description/meshes/right_gear.stl" scale="0.001 0.001 0.001" />
       </geometry>
+      <material name="gripper_grey">
+          <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
     </visual>
 
     <collision name="right_gear_collision">
@@ -284,6 +286,9 @@
         <geometry>
             <mesh filename="package://robot_arm_description/meshes/links.stl" scale="0.001 0.001 0.001" />
         </geometry>
+        <material name="gripper_grey">
+            <color rgba="0.5 0.5 0.5 1.0"/>
+        </material>
     </visual>
     <collision name="links_collision">
         <origin xyz="0 0 -0.00870" rpy="0 0 -0.03141" />
@@ -323,6 +328,9 @@
       <geometry>
           <mesh filename="package://robot_arm_description/meshes/gripper-fingures.stl" scale="0.001 0.001 0.001" />
       </geometry>
+      <material name="gripper_grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+    </material>
     </visual>
     <collision>
       <origin xyz="0 0 0.00465" rpy="3.1415 0 0.39793" />
@@ -363,6 +371,9 @@
       <geometry>
           <mesh filename="package://robot_arm_description/meshes/left_gear.stl" scale="0.001 0.001 0.001" />
       </geometry>
+      <material name="gripper_grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+    </material>
   </visual>
 
     <collision>
@@ -405,7 +416,13 @@
       <geometry>
           <mesh filename="package://robot_arm_description/meshes/links.stl" scale="0.001 0.001 0.001" />
       </geometry>
+      <material name="gripper_grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
     </visual>
+    <material name="gripper_grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+    </material>
     <collision>
       <origin xyz="0.0 0.0 -0.0087" rpy="0.0 0.0 0.031416" />
       <geometry>
@@ -445,6 +462,9 @@
       <geometry>
           <mesh filename="package://robot_arm_description/meshes/gripper-fingures.stl" scale="0.001 0.001 0.001" />
       </geometry>
+      <material name="gripper_grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+    </material>
     </visual>
 
     <collision name="gripper-fingures_collision">

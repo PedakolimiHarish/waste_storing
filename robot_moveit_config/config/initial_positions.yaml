@@ -2,6 +2,6 @@
 
 initial_positions:
   base_link_link_1: 0
-  link_1_link_2: 0
-  link_2_link_3: 0
-  link_3_link_4: 0
+  link_1_link_2: -0.4971
+  link_2_link_3: -0.8317
+  link_3_link_4: 0.4947

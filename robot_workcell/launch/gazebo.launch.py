@@ -47,15 +47,6 @@ def generate_launch_description():
         package=package_name_description
     ).find(package_name_description)
 
-    conveyor_share = FindPackageShare(
-        package='conveyorbelt_gz'
-    ).find('conveyorbelt_gz')
-
-    conveyor_models_path = os.path.join(
-        conveyor_share,
-        'models'
-    )
-
     description_share_parent = os.path.dirname(pkg_share_description)
 
     gazebo_models_path = os.path.join(
@@ -206,7 +197,6 @@ def generate_launch_description():
         'GZ_SIM_RESOURCE_PATH',
         os.pathsep.join([
             gazebo_models_path,
-            conveyor_models_path,
             description_share_parent,
         ])
     )

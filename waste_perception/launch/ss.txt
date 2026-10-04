@@ -1,0 +1,126 @@
+reb object drop
+ubuntu@docker-desktop:~/ros2_ws$ ros2 topic echo /joint_states --once
+header:
+  stamp:
+    sec: 25
+    nanosec: 480000000
+  frame_id: base_link
+name:
+- base_link_link_1
+- left_gear_left_finger_joint
+- link_1_link_2
+- link_2_link_3
+- link_3_link_4
+- link_4_left_gear_joint
+- link_4_left_link_joint
+- link_4_right_gear_joint
+- link_4_right_link_joint
+- right_gear_right_finger_joint
+position:
+- 1.5777262449264526
+- 2.919357029895764e-05
+- -0.3755198121070862
+- -1.2840920686721802
+- -4.461618300410919e-05
+- -3.137505700578913e-05
+- -2.8286345695960335e-05
+- -2.911798219429329e-05
+- 2.910060720751062e-05
+- 3.0023100407561287e-05
+velocity:
+- -5.7148165069520473e-05
+- 9.313225746154785e-10
+- 1.2991949915885925e-05
+- -5.239062011241913e-05
+- 0.0
+- -4.656612873077393e-10
+- -1.1641532182693481e-10
+- 0.0
+- -6.984919309616089e-10
+- -1.862645149230957e-09
+effort:
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+- .n
+
+once it reaches this pos it should open gripper
+
+blue bin
+
+ubuntu@docker-desktop:~/ros2_ws$ ros2 topic echo /joint_states --once
+A message was lost!!!
+        total count change:1
+        total count: 1---
+header:
+  stamp:
+    sec: 36
+    nanosec: 880000000
+  frame_id: base_link
+name:
+- base_link_link_1
+- left_gear_left_finger_joint
+- link_1_link_2
+- link_2_link_3
+- link_3_link_4
+- link_4_left_gear_joint
+- link_4_left_link_joint
+- link_4_right_gear_joint
+- link_4_right_link_joint
+- right_gear_right_finger_joint
+position:
+- -1.5775766372680664
+- 2.8796759579563513e-05
+- -0.37554851174354553
+- -1.2840968370437622
+- 8.513393549947068e-05
+- -3.098095839959569e-05
+- -2.7906891773454845e-05
+- -2.8721140552079305e-05
+- 2.8688586098724045e-05
+- 2.959131234092638e-05
+velocity:
+- -5.7205070334021e-05
+- 1.1883676052093506e-06
+- -1.1498108506202698e-05
+- -4.939734935760498e-05
+- 0.0
+- -1.1818483471870422e-06
+- -1.1489610187709332e-06
+- -1.1879019439220428e-06
+- 1.2156669981777668e-06
+- 1.253560185432434e-06
+effort:
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+- .nan
+---
+
+
+
+
+
+ros2 service call \
+/world/waste_sorting_cell/remove \
+ros_gz_interfaces/srv/DeleteEntity \
+"{entity: {name: 'red_object', type: 2}}"
+
+
+
+ros2 service call \
+/world/waste_sorting_cell/remove \
+ros_gz_interfaces/srv/DeleteEntity \
+"{entity: {name: 'blue_object', type: 2}}"
